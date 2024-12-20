@@ -13,4 +13,56 @@ model User {
   password                        String?
   avatar                          String?
   created_at                      DateTime              @default(now())
+
+  //relation field
+  feedbackPosts                   FeedbackPost[]
+  upvotes                         Upvote[]
+}
+
+model FeedbackPost {
+  id                              String                @id @default(uuid())
+  title                           String
+  description                     String
+  
+  //reference category_id to Category id field
+  category                        Category              @relation(fields: [category_id],references: [id])
+  category_id                     String
+
+  status                          Status                @default(IDEA)
+
+  //reference author_id to User id field
+  user                            User                  @relation(fields: [author_id],references: [id])                
+  author_id                       String
+  
+  //setting default value of created_at to a timestamp when record is created
+  created_at                      DateTime              @default(now())
+  updated_at                      DateTime              @updatedAt //tracks time when record is updated
+
+  upvotes     Upvote[]
+}
+
+model Category {
+  id                              String                @id @default(uuid())
+  name                            String                @unique
+  feedbackPosts                   FeedbackPost[]
+}
+
+model Upvote {
+  id                              String                @id @default(uuid())
+  userId                          String
+  feedbackPostId                  String
+
+  user                            User                  @relation(fields: [userId], references: [id])
+  feedbackPost                    FeedbackPost          @relation(fields: [feedbackPostId], references: [id])
+
+  @@unique([userId, feedbackPostId]) // Ensures each user can only vote once per post
+}
+
+//In my opinion we dont need seperate  Status table so i will use enums
+enum Status {
+  IDEA
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  REJECTED
 }
