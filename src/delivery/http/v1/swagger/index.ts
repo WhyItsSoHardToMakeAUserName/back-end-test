@@ -9,10 +9,21 @@ export const options: Options = {
       title: 'Test API',
       version: '1.0.0',
     },
-    servers: [{ url: '/api/v1' }]
+    servers: [{ url: '/api/v1' }],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    "security": [{ "bearerAuth": [] }],
   },
   apis: ['./src/delivery/http/v1/handlers/**/*.ts', './src/domain/entity/**/*.ts'],
 };
+
 
 export const buildSwagger = () => {
   const swagger = Express.Router();
