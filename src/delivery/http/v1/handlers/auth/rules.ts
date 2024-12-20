@@ -42,3 +42,9 @@ export const getMeRules = [
   authRequired({}),
   validateSchema
 ];
+
+export const autorizationRequiredRules = [
+  header('authorization').exists().notEmpty().isString(),
+  authRequired({}),
+  validateSchema
+];
